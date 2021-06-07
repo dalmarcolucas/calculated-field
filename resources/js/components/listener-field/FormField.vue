@@ -136,11 +136,7 @@
              * Fill the given FormData object with the field's internal value.
              */
             fill(formData) {
-                console.log('recupera');
-                console.log(this.field.attribute);
-                console.log(this.value);
                 formData.append(this.field.attribute, this.value || "");
-                console.log(formData);
             },
 
             /**
