@@ -15,6 +15,7 @@
         "laravel-nova": "^1.0"
     },
     "dependencies": {
+        "v-money": "^0.8.1",
         "numeral": "^2.0.6",
         "vue": "^2.5.0"
     }

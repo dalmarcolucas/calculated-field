@@ -1,5 +1,6 @@
 <template>
-    <span>{{ field.value }}</span>
+    <money v-if="field.type == 'real'" v-model="field.value"></money>
+    <span v-else>{{ field.value }}</span>
 </template>
 
 <script>

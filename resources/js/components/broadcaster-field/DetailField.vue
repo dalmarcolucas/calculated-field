@@ -1,5 +1,25 @@
 <template>
-    <panel-item :field="field" />
+    <div v-if="field.type == 'real'" class="flex border-b border-40 remove-bottom-border">
+        <div class="w-1/4 py-4">
+            <h4 class="font-normal text-80">
+                {{field.name}}
+            </h4>
+        </div>
+        <div class="w-3/4 py-4">
+            <money v-model="field.value" class="text-90">555.55</money>
+        </div>
+    </div>
+    <div v-else-if="field.type == 'number'" class="flex border-b border-40 remove-bottom-border">
+        <div class="w-1/4 py-4">
+            <h4 class="font-normal text-80">
+                {{field.name}}
+            </h4>
+        </div>
+        <div class="w-3/4 py-4">
+            {{(Number(field.value)).toLocaleString('pt-BR')}}
+        </div>
+    </div>
+    <panel-item v-else :field="field" />
 </template>
 
 <script>

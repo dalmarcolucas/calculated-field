@@ -3,6 +3,7 @@
 namespace Codebykyle\CalculatedField;
 
 use Illuminate\Http\Request;
+use Laravel\Nova\Element;
 use Laravel\Nova\Fields\Field;
 
 class ListenerField extends Field
@@ -73,6 +74,32 @@ class ListenerField extends Field
     public function calculateWith(callable $calculateFunction) {
         $this->calculateFunction = $calculateFunction;
         return $this;
+    }
+
+    /**
+     * Set the type of the field (string, number)
+     *
+     * @param $type
+     * @return Element
+     */
+    public function setType($type) : Element
+    {
+        return $this->withMeta([
+            'type' => $type
+        ]);
+    }
+
+    /**
+     * Set the field is disabled
+     *
+     * @param $type
+     * @return Element
+     */
+    public function disabled($disabled) : Element
+    {
+        return $this->withMeta([
+            'disabled' => $disabled
+        ]);
     }
 
     /***

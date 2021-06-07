@@ -1,78 +1,95 @@
 <template>
-  <default-field :field="field" :errors="errors">
-    <template slot="field">
-      <input
-        :id="field.attribute"
-        :type="this.field.type"
-        class="w-full form-control form-input form-input-bordered"
-        :class="errorClasses"
-        :placeholder="field.name"
-        :value="value | moneyFormat(field.numberFormat)"
-        @input="setFieldAndMessage"
-        :min="field.min"
-        :max="field.max"
-      />
-    </template>
-  </default-field>
+    <default-field v-if="field.type == 'real'" :field="field">
+        <template slot="field">
+            <money :id="field.name" type="text"
+                   class="w-full form-control form-input form-input-bordered"
+                   :class="errorClasses"
+                   :placeholder="field.name"
+                   @input="setFieldAndMessage"
+                   :value="value"
+                   v-model="value">
+            </money>
+
+            <p v-if="hasError" class="my-2 text-danger">
+                {{ firstError }}
+            </p>
+        </template>
+    </default-field>
+    <default-field v-else :field="field" :errors="errors">
+        <template slot="field">
+            <input
+                :id="field.attribute"
+                :type="this.field.type"
+                class="w-full form-control form-input form-input-bordered"
+                :class="errorClasses"
+                :placeholder="field.name"
+                :value="value | moneyFormat(field.numberFormat)"
+                @input="setFieldAndMessage"
+                :min="field.min"
+                :max="field.max"
+                :step="field.step"
+            />
+        </template>
+    </default-field>
 </template>
 
 <script>
-import { FormField, HandlesValidationErrors } from "laravel-nova";
-import numeral from "numeral";
+    import {FormField, HandlesValidationErrors} from "laravel-nova";
+    import numeral from "numeral";
 
-export default {
-  mixins: [FormField, HandlesValidationErrors],
+    export default {
+        mixins: [FormField, HandlesValidationErrors],
 
-  props: ["resourceName", "resourceId", "field"],
+        props: ["resourceName", "resourceId", "field"],
 
-  methods: {
-    setFieldAndMessage(el) {
-      const rawValue = el ? el.target.value : this.value;
-      let parsedValue = rawValue;
+        methods: {
+            setFieldAndMessage(el) {
+                const rawValue = el && el.target ? el.target.value : this.value;
+                let parsedValue = rawValue;
 
-      if (this.field.type === "number") {
-        parsedValue = Number(rawValue);
-      }
+                if (this.field.type === "number") {
+                    parsedValue = Number(rawValue);
+                }
 
-      Nova.$emit(this.field.broadcastTo, {
-        field_name: this.field.attribute,
-        value: parsedValue
-      });
+                Nova.$emit(this.field.broadcastTo, {
+                    field_name: this.field.attribute,
+                    value: parsedValue
+                });
 
-      this.value = parsedValue;
-    },
+                this.value = parsedValue;
+            },
 
-    /*
-     * Set the initial, internal value for the field.
-     */
-    setInitialValue() {
-      this.value = this.field.value || "";
-      if(this.field.initialize) {
-        this.setFieldAndMessage()
-      }
-    },
+            /*
+             * Set the initial, internal value for the field.
+             */
+            setInitialValue() {
+                this.value = this.field.value || "";
+                if (this.field.initialize) {
+                    this.setFieldAndMessage()
+                }
+            },
 
-    /**
-     * Fill the given FormData object with the field's internal value.
-     */
-    fill(formData) {
-      formData.append(this.field.attribute, this.value || "");
-    },
+            /**
+             * Fill the given FormData object with the field's internal value.
+             */
+            fill(formData) {
+                formData.append(this.field.attribute, this.value || "");
+            },
 
-    /**
-     * Update the field's internal value.
-     */
-    handleChange(value) {
-      this.value = value;
-    }
-  },
-  filters: {
-    moneyFormat(number, format) {
-      if (!format) {
-        return number;
-      }
-      return numeral(number).format(format);
-    }
-  }
-};
+            /**
+             * Update the field's internal value.
+             */
+            handleChange(value) {
+                this.value = value;
+            }
+        },
+        filters: {
+            moneyFormat(number, format) {
+                if (!format) {
+                    return number;
+                }
+                return numeral(number).format(format);
+            }
+        }
+    };
 </script>

@@ -4,6 +4,7 @@ namespace Codebykyle\CalculatedField;
 
 use Laravel\Nova\Element;
 use Laravel\Nova\Fields\Field;
+use Laravel\Nova\Fields\Number;
 
 class BroadcasterField extends Field
 {
@@ -48,6 +49,17 @@ class BroadcasterField extends Field
         return $this->withMeta([
             'type' => $type
         ]);
+    }
+
+    /**
+     * The step size the field will increment and decrement by.
+     *
+     * @param  mixed  $step
+     * @return $this
+     */
+    public function step($step)
+    {
+        return $this->withMeta(['step' => $step]);
     }
 
     /**
